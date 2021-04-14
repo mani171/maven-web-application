@@ -1,0 +1,36 @@
+node('master')
+{
+  
+  
+stage ("checkoutcode")
+{
+    git branch: 'development', credentialsId: 'f317d7dd-f252-4ba5-a98a-2761d2128ac2', url: 'https://github.com/mani171/maven-web-application.git'
+}
+def mavenHome = tool name: "maven 3.6.3"
+stage("build")
+{
+    sh "${mavenHome}/bin/mvn clean package"
+}
+stage("exicute")
+{
+    sh "${mavenHome}/bin/mvn sonar:sonar"
+}
+stage("upload")
+{
+    sh "${mavenHome}/bin/mvn deploy"
+}
+stage("deploy app into tomcat server")
+{
+    sshagent(['6f6c1483-7abe-4aa5-946d-b47597f53eb4']) {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.233.18.194:/opt/apache-tomcat-9.0.44/webapps/"
+}
+
+    
+}
+stage("email")
+{
+    emailext body: 'build is running', recipientProviders: [developers()], subject: 'build is running', to: 'mvardhan717@gmail.com'
+    
+}
+
+}

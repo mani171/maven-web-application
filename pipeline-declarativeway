@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+    tools{
+        maven 'maven 3.6.3'
+    }
+    triggers{
+        pollSCM("* * * * *")
+    }
+    options {
+        timestamps()
+buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '3', daysToKeepStr: '', numToKeepStr: '3'))
+    }
+stages{
+    stage(getthecode){
+        steps{
+            
+            git branch: 'development', credentialsId: 'f317d7dd-f252-4ba5-a98a-2761d2128ac2', url: 'https://github.com/mani171/maven-web-application.git'
+            
+        }
+    }
+
+ stage(build)
+{
+    steps{
+        sh"mvn clean package"
+    }
+}
+stage(sonarqube)
+{
+    steps{
+        sh"mvn sonar:sonar"
+    }
+}
+stage(deploy)
+{  steps{
+        sh"mvn deploy"
+    }
+}
+stage(uploadappiuntotomcatserver)
+{
+    steps{
+          sshagent(['6f6c1483-7abe-4aa5-946d-b47597f53eb4']) {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@65.2.30.121:/opt/apache-tomcat-9.0.44/webapps/"
+    }
+}
+}
+}
+}

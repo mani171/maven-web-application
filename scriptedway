@@ -17,7 +17,7 @@ stage("exicute")
 }
 stage("upload")
 {
-    sh "${mavenHome}/bin/mvn deploy"
+    sh "${mavenHome}/bin/mvn clean deploy"
 }
 stage("deploy app into tomcat server")
 {

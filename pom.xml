@@ -98,13 +98,13 @@
 	<distributionManagement>
 	
 	    <repository>
-	      <id>nexus</id>
+	      <id>mani</id>
 	      <name>Mithun Technologies Releases Nexus Repository</name>
 	      <url>http://13.233.98.37:9898/mani/repository/wallmart-release/</url>
 	    </repository>
 	    
 	    <snapshotRepository>
-	      <id>nexus</id>
+	      <id>mani</id>
 	      <name>Mithun Technologies Snapshot Nexus Repository </name>
 	      <url>http://13.233.98.37:9898/mani/repository/wallmart-sanpshot/</url>
 	    </snapshotRepository>
